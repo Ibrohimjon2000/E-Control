@@ -71,7 +71,7 @@ class QrCodeFragment : Fragment() {
 
         codeScanner.decodeCallback = DecodeCallback {
             requireActivity().runOnUiThread {
-                viewModel.getEmployeeByPinCode(it.text)
+                viewModel.getEmployeeByPinCode(it.text,requireContext())
             }
         }
 

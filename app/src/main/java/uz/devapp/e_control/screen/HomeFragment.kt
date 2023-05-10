@@ -94,6 +94,36 @@ class HomeFragment : Fragment() {
                 }
             }
 
+            viewModel.employeeLiveData.observe(requireActivity()) {
+                when (it) {
+                    is DataResult.Error -> {
+                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                        input1.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                        input2.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                        input3.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                        input4.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                        inputTextBuilder = StringBuilder()
+                        inputText.setText("")
+                    }
+                    is DataResult.LoadingHide -> {
+
+                    }
+                    is DataResult.LoadingShow -> {
+
+                    }
+                    is DataResult.Success -> {
+                        if (it.result != null) {
+                            val bundle = Bundle()
+                            bundle.putSerializable(Constants.EXTRA_DATA, it.result)
+                            requireActivity().findNavController(R.id.fragmentContainerView)
+                                .navigate(R.id.action_homeFragment_to_setStatusFragment, bundle)
+                            inputText.setText("")
+                            inputTextBuilder = StringBuilder()
+                        }
+                    }
+                }
+            }
+
             inputText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -135,36 +165,7 @@ class HomeFragment : Fragment() {
                             input2.setBackgroundResource(R.drawable.pincode_circle_background)
                             input3.setBackgroundResource(R.drawable.pincode_circle_background)
                             input4.setBackgroundResource(R.drawable.pincode_circle_background)
-                            viewModel.getEmployeeByPinCode(p0.toString())
-                            viewModel.employeeLiveData.observe(requireActivity()) {
-                                when (it) {
-                                    is DataResult.Error -> {
-                                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
-                                        input1.setBackgroundResource(R.drawable.pincode_circle_empty_background)
-                                        input2.setBackgroundResource(R.drawable.pincode_circle_empty_background)
-                                        input3.setBackgroundResource(R.drawable.pincode_circle_empty_background)
-                                        input4.setBackgroundResource(R.drawable.pincode_circle_empty_background)
-                                        inputText.setText("")
-                                        inputTextBuilder = StringBuilder()
-                                    }
-                                    is DataResult.LoadingHide -> {
-
-                                    }
-                                    is DataResult.LoadingShow -> {
-
-                                    }
-                                    is DataResult.Success -> {
-                                        if (it.result != null) {
-                                            val bundle = Bundle()
-                                            bundle.putSerializable(Constants.EXTRA_DATA, it.result)
-                                            requireActivity().findNavController(R.id.fragmentContainerView)
-                                                .navigate(R.id.action_homeFragment_to_setStatusFragment, bundle)
-                                            inputText.setText("")
-                                            inputTextBuilder = StringBuilder()
-                                        }
-                                    }
-                                }
-                            }
+                            viewModel.getEmployeeByPinCode(p0.toString(),requireContext())
                         }
                     }
                 }

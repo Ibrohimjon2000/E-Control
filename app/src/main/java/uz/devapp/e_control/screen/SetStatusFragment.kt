@@ -103,7 +103,7 @@ class SetStatusFragment : Fragment() {
                 type = "output"
             }
 
-            val callback=object :OnBackPressedCallback(true){
+            val callback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().findNavController(R.id.fragmentContainerView)
                         .navigate(R.id.action_setStatusFragment_to_homeFragment)
@@ -111,6 +111,24 @@ class SetStatusFragment : Fragment() {
             }
 
             requireActivity().onBackPressedDispatcher.addCallback(callback)
+
+            viewModel.purposeLiveData.observe(requireActivity()) {
+                when (it) {
+                    is DataResult.Error -> {
+                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    }
+                    is DataResult.LoadingHide -> {
+
+                    }
+                    is DataResult.LoadingShow -> {
+
+                    }
+                    is DataResult.Success -> {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_setStatusFragment_to_homeFragment)
+                    }
+                }
+            }
 
             viewModel.attendsLiveData.observe(requireActivity()) {
                 when (it) {
@@ -142,28 +160,17 @@ class SetStatusFragment : Fragment() {
                             rv.adapter =
                                 PurposeAdapter(it.result.purposes, object : PurposeAdapterCallback {
                                     override fun onClickListener(item: Purpose) {
-                                      viewModel.setPurpose(PurposeRequest(it.result.attendanceId,1,param1!!.id,item.id))
+                                        viewModel.setPurpose(
+                                            PurposeRequest(
+                                                it.result.attendanceId,
+                                                1,
+                                                param1!!.id,
+                                                item.id
+                                            ), requireContext()
+                                        )
                                     }
                                 })
                         }
-                    }
-                }
-            }
-
-            viewModel.purposeLiveData.observe(requireActivity()){
-                when(it){
-                    is DataResult.Error -> {
-                        Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
-                    }
-                    is DataResult.LoadingHide -> {
-
-                    }
-                    is DataResult.LoadingShow -> {
-
-                    }
-                    is DataResult.Success -> {
-                        requireActivity().findNavController(R.id.fragmentContainerView)
-                            .navigate(R.id.action_setStatusFragment_to_homeFragment)
                     }
                 }
             }
@@ -199,9 +206,15 @@ class SetStatusFragment : Fragment() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     lifecycleScope.launch {
-                        val compressedImageFile = Compressor.compress(requireContext(),photoFile)
+                        val compressedImageFile = Compressor.compress(requireContext(), photoFile)
                         val savedUri = Uri.fromFile(compressedImageFile)
-                        viewModel.saveAttends(savedUri.path.toString(), type, param1!!.id, 1)
+                        viewModel.saveAttends(
+                            savedUri.path.toString(),
+                            type,
+                            param1!!.id,
+                            1,
+                            requireContext()
+                        )
                     }
                 }
 
