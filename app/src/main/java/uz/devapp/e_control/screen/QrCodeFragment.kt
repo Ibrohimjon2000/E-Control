@@ -1,30 +1,27 @@
 package uz.devapp.e_control.screen
 
-import android.content.pm.PackageManager
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.budiyev.android.codescanner.*
+import com.permissionx.guolindev.PermissionX
 import dagger.hilt.android.AndroidEntryPoint
-import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.R
-import uz.devapp.e_control.data.model.EmployeeModel
 import uz.devapp.e_control.data.repository.sealed.DataResult
 import uz.devapp.e_control.databinding.FragmentQrCodeBinding
+import uz.devapp.e_control.utils.Constants
 
 @AndroidEntryPoint
 class QrCodeFragment : Fragment() {
     lateinit var binding: FragmentQrCodeBinding
     private lateinit var codeScanner: CodeScanner
-    val MY_CAMERA_PERMISSION_REQUEST = 1111
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
@@ -82,45 +79,18 @@ class QrCodeFragment : Fragment() {
             requireActivity().runOnUiThread {
                 Toast.makeText(requireActivity(), "Camera Error: ${it.message}", Toast.LENGTH_SHORT)
                     .show()
-                requireActivity().findNavController(R.id.fragmentContainerView).popBackStack()
             }
         }
 
-        checkPermission()
+        PermissionX.init(requireActivity())
+            .permissions(
+                Manifest.permission.CAMERA
+            )
+            .request { allGranted, grantedList, deniedList ->
+                codeScanner.startPreview()
+            }
 
         return binding.root
-    }
-
-    fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                android.Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(android.Manifest.permission.CAMERA),
-                MY_CAMERA_PERMISSION_REQUEST
-            )
-        } else {
-            codeScanner.startPreview()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == MY_CAMERA_PERMISSION_REQUEST && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            codeScanner.startPreview()
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "Can not scan until you give the camera permission",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
     }
 
     override fun onResume() {
