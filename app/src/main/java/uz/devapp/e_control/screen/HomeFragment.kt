@@ -106,10 +106,10 @@ class HomeFragment : Fragment() {
                         inputText.setText("")
                     }
                     is DataResult.LoadingHide -> {
-
+                        progress.visibility = View.GONE
                     }
                     is DataResult.LoadingShow -> {
-
+                        progress.visibility = View.VISIBLE
                     }
                     is DataResult.Success -> {
                         if (it.result != null) {

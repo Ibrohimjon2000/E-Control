@@ -23,9 +23,11 @@ class MainRepository(private val api: Api) {
                     emit(DataResult.LoadingHide())
                     emit(DataResult.Success(result.body()?.data))
                 } else {
+                    emit(DataResult.LoadingHide())
                     emit(DataResult.Error(result.body()?.message ?: ""))
                 }
             } else {
+                emit(DataResult.LoadingHide())
                 emit(DataResult.Error(result.message()))
             }
         } else {
