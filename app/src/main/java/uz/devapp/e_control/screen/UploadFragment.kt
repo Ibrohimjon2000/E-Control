@@ -26,6 +26,7 @@ class UploadFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
     private var networkHelper: NetworkHelper? = null
     private lateinit var adapter: AttendsAdapter
+    private var bool=true
     val appDatabase: AppDatabase by lazy {
         AppDatabase.getInstance(requireContext())
     }
@@ -76,6 +77,7 @@ class UploadFragment : Fragment() {
                         } else {
                             binding.lottie.visibility = View.GONE
                         }
+                        bool=true
                     }
                 }
             }
@@ -84,21 +86,24 @@ class UploadFragment : Fragment() {
         binding.upload.setOnClickListener {
             networkHelper = NetworkHelper(requireContext())
             if (networkHelper?.isNetworkConnected() == true) {
-                attendsEntityList.forEach { attendsEntity ->
-                    val sdf = SimpleDateFormat("yyyy-mm-dd hh:mm:ss")
-                    val resultdate = Date(attendsEntity.date)
-                    val format = sdf.format(resultdate)
-                    binding.root.postDelayed({
-                        viewModel.saveAttendsOffline(
-                            attendsEntity.image,
-                            attendsEntity.type,
-                            format,
-                            attendsEntity.employeeId,
-                            attendsEntity.deviceId,
-                            attendsEntity.purposeId
-                        )
-                    }, 100)
-                    appDatabase.attendsDao().deleteAttends(attendsEntity)
+                if (bool){
+                    attendsEntityList.forEach { attendsEntity ->
+                        val sdf = SimpleDateFormat("yyyy-mm-dd hh:mm:ss")
+                        val resultdate = Date(attendsEntity.date)
+                        val format = sdf.format(resultdate)
+                        binding.root.postDelayed({
+                            viewModel.saveAttendsOffline(
+                                attendsEntity.image,
+                                attendsEntity.type,
+                                format,
+                                attendsEntity.employeeId,
+                                attendsEntity.deviceId,
+                                attendsEntity.purposeId
+                            )
+                        }, 100)
+                        appDatabase.attendsDao().deleteAttends(attendsEntity)
+                    }
+                    bool=false
                 }
             } else {
                 Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT)
