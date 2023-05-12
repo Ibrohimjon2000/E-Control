@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.permissionx.guolindev.PermissionX
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
@@ -152,6 +153,11 @@ class SetStatusFragment : Fragment() {
                         resultTime.text =
                             (if (type == "input") "Keldi: " else "Ketdi: ") + it.result.nowTime
                         status.text = if ((it.result.moment)) "" else "Kech qoldi"
+                        if (it.result.moment) {
+                            status.visibility = View.GONE
+                        } else {
+                            status.visibility = View.VISIBLE
+                        }
 
                         if ((it.result.moment)) {
                             rv.visibility = View.GONE
@@ -215,24 +221,37 @@ class SetStatusFragment : Fragment() {
                         networkHelper = NetworkHelper(requireContext())
                         if (networkHelper?.isNetworkConnected() == true) {
                             viewModel.saveAttends(savedUri.path.toString(), type, param1!!.id, 1)
-                        }else{
+                            Glide.with(requireContext())
+                                .load(savedUri.path.toString())
+                                .into(binding.image)
+                        } else {
                             val currentTimeMillis = System.currentTimeMillis()
                             val sdf = SimpleDateFormat("HH:mm")
                             val resultdate = Date(currentTimeMillis)
                             val format = sdf.format(resultdate)
-                            val moment=resultdate.hours<8
+                            val moment = resultdate.hours < 8
 
+                            Glide.with(requireContext())
+                                .load(savedUri.path.toString())
+                                .into(binding.image)
                             binding.card.visibility = View.GONE
                             binding.cardResult.visibility = View.VISIBLE
                             binding.resultName.text = param1!!.name
                             binding.resultTime.text =
                                 (if (type == "input") "Keldi: " else "Ketdi: ") + format
-                            if (type=="input"){
+                            if (type == "input") {
                                 binding.status.text = if ((moment)) "" else "Kech qoldi"
+                                if (moment) {
+                                    binding.status.visibility = View.GONE
+                                } else {
+                                    binding.status.visibility = View.VISIBLE
+                                }
+                            } else {
+                                binding.status.visibility = View.GONE
                             }
 
-                            when(type){
-                                "input"->{
+                            when (type) {
+                                "input" -> {
                                     if ((moment)) {
                                         binding.rv.visibility = View.GONE
                                         binding.root.postDelayed({
@@ -242,17 +261,36 @@ class SetStatusFragment : Fragment() {
                                     } else {
                                         binding.rv.visibility = View.VISIBLE
                                         binding.rv.adapter =
-                                            PurposeAdapter(appDatabase.purposeDao().getPurpose(), object : PurposeAdapterCallback {
-                                                override fun onClickListener(item: PurposeEntity) {
-                                                    appDatabase.attendsDao().addAttends(AttendsEntity(image = savedUri.path.toString(), type = type, employeeId = param1!!.id, deviceId = 1, date = currentTimeMillis, purposeId = item.id))
-                                                    requireActivity().findNavController(R.id.fragmentContainerView)
-                                                        .navigate(R.id.action_setStatusFragment_to_homeFragment)
-                                                }
-                                            })
+                                            PurposeAdapter(
+                                                appDatabase.purposeDao().getPurpose(),
+                                                object : PurposeAdapterCallback {
+                                                    override fun onClickListener(item: PurposeEntity) {
+                                                        appDatabase.attendsDao().addAttends(
+                                                            AttendsEntity(
+                                                                image = savedUri.path.toString(),
+                                                                type = type,
+                                                                employeeId = param1!!.id,
+                                                                deviceId = 1,
+                                                                date = currentTimeMillis,
+                                                                purposeId = item.id
+                                                            )
+                                                        )
+                                                        requireActivity().findNavController(R.id.fragmentContainerView)
+                                                            .navigate(R.id.action_setStatusFragment_to_homeFragment)
+                                                    }
+                                                })
                                     }
                                 }
-                                "output"->{
-                                    appDatabase.attendsDao().addAttends(AttendsEntity(image = savedUri.path.toString(), type = type, employeeId = param1!!.id, deviceId = 1, date = currentTimeMillis))
+                                "output" -> {
+                                    appDatabase.attendsDao().addAttends(
+                                        AttendsEntity(
+                                            image = savedUri.path.toString(),
+                                            type = type,
+                                            employeeId = param1!!.id,
+                                            deviceId = 1,
+                                            date = currentTimeMillis
+                                        )
+                                    )
                                     binding.rv.visibility = View.GONE
                                     binding.root.postDelayed({
                                         requireActivity().findNavController(R.id.fragmentContainerView)

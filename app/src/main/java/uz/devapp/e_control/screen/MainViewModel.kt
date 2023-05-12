@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import uz.devapp.e_control.data.model.AttendsModel
-import uz.devapp.e_control.database.entity.EmployeeEntity
 import uz.devapp.e_control.data.model.request.PurposeRequest
 import uz.devapp.e_control.data.repository.MainRepository
 import uz.devapp.e_control.data.repository.sealed.DataResult
+import uz.devapp.e_control.database.entity.EmployeeEntity
 import uz.devapp.e_control.database.entity.PurposeEntity
 import javax.inject.Inject
 
@@ -22,7 +22,8 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
     var progressLiveData: LiveData<Boolean> = _progressLiveData
 
     private var _employeeEntityLiveData = MutableLiveData<DataResult<List<EmployeeEntity>?>>()
-    var employeeEntityLiveData: LiveData<DataResult<List<EmployeeEntity>?>> = _employeeEntityLiveData
+    var employeeEntityLiveData: LiveData<DataResult<List<EmployeeEntity>?>> =
+        _employeeEntityLiveData
 
     private var _employeeLiveData = MutableLiveData<DataResult<EmployeeEntity?>>()
     var employeeLiveData: LiveData<DataResult<EmployeeEntity?>> = _employeeLiveData
@@ -71,17 +72,25 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
         }
     }
 
-    fun saveAttendsOffline(image: String, type: String, date:String, employeeId: Int, deviceId: Int,purposeId:Int) {
+    fun saveAttendsOffline(
+        image: String,
+        type: String,
+        date: String,
+        employeeId: Int,
+        deviceId: Int,
+        purposeId: Int
+    ) {
         viewModelScope.launch {
-            repository.saveAttendsOffline(image, type, date, employeeId, deviceId,purposeId).collect {
-                _attendsOfflineLiveData.value = it
-            }
+            repository.saveAttendsOffline(image, type, date, employeeId, deviceId, purposeId)
+                .collect {
+                    _attendsOfflineLiveData.value = it
+                }
         }
     }
 
-    fun setPurpose(request: PurposeRequest,context: Context) {
+    fun setPurpose(request: PurposeRequest, context: Context) {
         viewModelScope.launch {
-            repository.setPurpose(request,context).collect {
+            repository.setPurpose(request, context).collect {
                 _purposeLiveData.value = it
             }
         }

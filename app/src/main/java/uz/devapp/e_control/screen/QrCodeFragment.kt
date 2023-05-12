@@ -80,19 +80,26 @@ class QrCodeFragment : Fragment() {
                 networkHelper = NetworkHelper(requireContext())
                 if (networkHelper?.isNetworkConnected() == true) {
                     viewModel.getEmployeeByPinCode(it.text)
-                }else{
-                    if (appDatabase.employeeDao().getEmployees().isNotEmpty()){
+                } else {
+                    if (appDatabase.employeeDao().getEmployees().isNotEmpty()) {
                         val employeeEntityList = appDatabase.employeeDao().getEmployees()
                         employeeEntityList.forEach { employeeEntity ->
-                            if (employeeEntity.pinCode==it.text.toInt()){
+                            if (employeeEntity.pinCode == it.text.toInt()) {
                                 val bundle = Bundle()
                                 bundle.putSerializable(Constants.EXTRA_DATA, employeeEntity)
                                 requireActivity().findNavController(R.id.fragmentContainerView)
-                                    .navigate(R.id.action_qrCodeFragment_to_setStatusFragment, bundle)
+                                    .navigate(
+                                        R.id.action_qrCodeFragment_to_setStatusFragment,
+                                        bundle
+                                    )
                             }
                         }
-                    }else{
-                        Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Internet not connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

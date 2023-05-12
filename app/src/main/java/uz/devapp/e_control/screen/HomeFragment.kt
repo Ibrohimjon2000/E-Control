@@ -3,19 +3,19 @@ package uz.devapp.e_control.screen
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.R
 import uz.devapp.e_control.data.repository.sealed.DataResult
 import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.databinding.FragmentHomeBinding
+import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.utils.NetworkHelper
 
 @AndroidEntryPoint
@@ -176,23 +176,34 @@ class HomeFragment : Fragment() {
                             networkHelper = NetworkHelper(requireContext())
                             if (networkHelper?.isNetworkConnected() == true) {
                                 viewModel.getEmployeeByPinCode(p0.toString())
-                            }else{
-                                if (appDatabase.employeeDao().getEmployees().isNotEmpty()){
-                                    val employeeEntityList = appDatabase.employeeDao().getEmployees()
-                                    var count=0
+                            } else {
+                                if (appDatabase.employeeDao().getEmployees().isNotEmpty()) {
+                                    val employeeEntityList =
+                                        appDatabase.employeeDao().getEmployees()
+                                    var count = 0
                                     employeeEntityList.forEach { employeeEntity ->
-                                        if (employeeEntity.pinCode==p0.toString().toInt()){
+                                        if (employeeEntity.pinCode == p0.toString().toInt()) {
                                             val bundle = Bundle()
-                                            bundle.putSerializable(Constants.EXTRA_DATA, employeeEntity)
+                                            bundle.putSerializable(
+                                                Constants.EXTRA_DATA,
+                                                employeeEntity
+                                            )
                                             requireActivity().findNavController(R.id.fragmentContainerView)
-                                                .navigate(R.id.action_homeFragment_to_setStatusFragment, bundle)
+                                                .navigate(
+                                                    R.id.action_homeFragment_to_setStatusFragment,
+                                                    bundle
+                                                )
                                             inputText.setText("")
                                             inputTextBuilder = StringBuilder()
                                             count++
                                         }
                                     }
-                                    if (count==0){
-                                        Toast.makeText(requireContext(), "Pin code is incorrect. Try again!", Toast.LENGTH_SHORT).show()
+                                    if (count == 0) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Pin code is incorrect. Try again!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                         input1.setBackgroundResource(R.drawable.pincode_circle_empty_background)
                                         input2.setBackgroundResource(R.drawable.pincode_circle_empty_background)
                                         input3.setBackgroundResource(R.drawable.pincode_circle_empty_background)
@@ -200,8 +211,12 @@ class HomeFragment : Fragment() {
                                         inputTextBuilder = StringBuilder()
                                         inputText.setText("")
                                     }
-                                }else{
-                                    Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Internet not connection",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         }

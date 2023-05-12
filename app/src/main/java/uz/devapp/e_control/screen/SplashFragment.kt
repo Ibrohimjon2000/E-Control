@@ -75,7 +75,7 @@ class SplashFragment : Fragment() {
                 binding.root.postDelayed({
                     requireActivity().findNavController(R.id.fragmentContainerView)
                         .navigate(R.id.action_splashFragment_to_homeFragment)
-                },2000)
+                }, 2000)
             } else {
                 Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT)
                     .show()

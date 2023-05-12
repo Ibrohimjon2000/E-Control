@@ -25,7 +25,7 @@ class UploadFragment : Fragment() {
     lateinit var binding: FragmentUploadBinding
     private val viewModel: MainViewModel by viewModels()
     private var networkHelper: NetworkHelper? = null
-    private lateinit var adapter:AttendsAdapter
+    private lateinit var adapter: AttendsAdapter
     val appDatabase: AppDatabase by lazy {
         AppDatabase.getInstance(requireContext())
     }
@@ -43,35 +43,39 @@ class UploadFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
-        val attendsEntityList = appDatabase.attendsDao().getAttends()
+        val attendsEntityList = appDatabase.attendsDao().getAttends() as ArrayList<AttendsEntity>
         val employeeEntityList = appDatabase.employeeDao().getEmployees()
         val purposeEntityList = appDatabase.purposeDao().getPurpose()
 
-        if (attendsEntityList.isEmpty()){
-            binding.lottie.visibility=View.VISIBLE
-        }else{
-            binding.lottie.visibility=View.GONE
+        if (attendsEntityList.isEmpty()) {
+            binding.lottie.visibility = View.VISIBLE
+        } else {
+            binding.lottie.visibility = View.GONE
         }
 
-        adapter= AttendsAdapter(attendsEntityList, employeeEntityList, purposeEntityList)
-        binding.rv.adapter =adapter
+        adapter = AttendsAdapter(attendsEntityList, employeeEntityList, purposeEntityList)
+        binding.rv.adapter = adapter
 
-        viewModel.attendsOfflineLiveData.observe(requireActivity()){
-            when(it){
+        viewModel.attendsOfflineLiveData.observe(requireActivity()) {
+            when (it) {
                 is DataResult.Error -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }
                 is DataResult.LoadingHide -> {
-                    binding.progress.visibility=View.GONE
+                    binding.progress.visibility = View.GONE
                 }
                 is DataResult.LoadingShow -> {
-                    binding.progress.visibility=View.VISIBLE
+                    binding.progress.visibility = View.VISIBLE
                 }
                 is DataResult.Success -> {
-                    if (appDatabase.attendsDao().getAttends().isEmpty()){
-                        requireActivity().findNavController(R.id.fragmentContainerView)
-                            .navigate(R.id.action_uploadFragment_to_homeFragment)
-                        Toast.makeText(requireContext(), "Data upload", Toast.LENGTH_SHORT).show()
+                    if (appDatabase.attendsDao().getAttends().isEmpty()) {
+                        attendsEntityList.removeAll(attendsEntityList.toSet())
+                        adapter.notifyDataSetChanged()
+                        if (attendsEntityList.isEmpty()) {
+                            binding.lottie.visibility = View.VISIBLE
+                        } else {
+                            binding.lottie.visibility = View.GONE
+                        }
                     }
                 }
             }
@@ -93,10 +97,10 @@ class UploadFragment : Fragment() {
                             attendsEntity.deviceId,
                             attendsEntity.purposeId
                         )
-                    },100)
+                    }, 100)
                     appDatabase.attendsDao().deleteAttends(attendsEntity)
                 }
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT)
                     .show()
             }
