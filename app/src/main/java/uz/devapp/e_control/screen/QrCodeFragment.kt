@@ -57,6 +57,7 @@ class QrCodeFragment : Fragment() {
             when (it) {
                 is DataResult.Error -> {
                     Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                    codeScanner.startPreview()
                 }
                 is DataResult.LoadingHide -> {
 
