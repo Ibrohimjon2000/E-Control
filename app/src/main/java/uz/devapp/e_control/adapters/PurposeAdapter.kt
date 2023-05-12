@@ -4,14 +4,14 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import uz.devapp.e_control.data.model.Purpose
+import uz.devapp.e_control.database.entity.PurposeEntity
 import uz.devapp.e_control.databinding.ItemPurposeBinding
 
 interface PurposeAdapterCallback{
-    fun onClickListener(item:Purpose)
+    fun onClickListener(item: PurposeEntity)
 }
 
-class PurposeAdapter(val items: List<Purpose>,val callback: PurposeAdapterCallback) : RecyclerView.Adapter<PurposeAdapter.Vh>() {
+class PurposeAdapter(val items: List<PurposeEntity>,val callback: PurposeAdapterCallback) : RecyclerView.Adapter<PurposeAdapter.Vh>() {
     inner class Vh(val binding: ItemPurposeBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Vh {

@@ -3,7 +3,6 @@ package uz.devapp.e_control.screen
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +13,20 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.R
-import uz.devapp.e_control.data.model.EmployeeModel
 import uz.devapp.e_control.data.repository.sealed.DataResult
+import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.databinding.FragmentHomeBinding
-import uz.devapp.e_control.utils.Constants.TAG
+import uz.devapp.e_control.utils.NetworkHelper
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     private lateinit var inputTextBuilder: StringBuilder
     private val viewModel: MainViewModel by viewModels()
+    private var networkHelper: NetworkHelper? = null
+    val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstance(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +38,11 @@ class HomeFragment : Fragment() {
             binding.btnQr.setOnClickListener {
                 requireActivity().findNavController(R.id.fragmentContainerView)
                     .navigate(R.id.action_homeFragment_to_qrCodeFragment)
+            }
+
+            binding.upload.setOnClickListener {
+                requireActivity().findNavController(R.id.fragmentContainerView)
+                    .navigate(R.id.action_homeFragment_to_uploadFragment)
             }
 
             btn1.setOnClickListener {
@@ -165,7 +173,37 @@ class HomeFragment : Fragment() {
                             input2.setBackgroundResource(R.drawable.pincode_circle_background)
                             input3.setBackgroundResource(R.drawable.pincode_circle_background)
                             input4.setBackgroundResource(R.drawable.pincode_circle_background)
-                            viewModel.getEmployeeByPinCode(p0.toString(),requireContext())
+                            networkHelper = NetworkHelper(requireContext())
+                            if (networkHelper?.isNetworkConnected() == true) {
+                                viewModel.getEmployeeByPinCode(p0.toString())
+                            }else{
+                                if (appDatabase.employeeDao().getEmployees().isNotEmpty()){
+                                    val employeeEntityList = appDatabase.employeeDao().getEmployees()
+                                    var count=0
+                                    employeeEntityList.forEach { employeeEntity ->
+                                        if (employeeEntity.pinCode==p0.toString().toInt()){
+                                            val bundle = Bundle()
+                                            bundle.putSerializable(Constants.EXTRA_DATA, employeeEntity)
+                                            requireActivity().findNavController(R.id.fragmentContainerView)
+                                                .navigate(R.id.action_homeFragment_to_setStatusFragment, bundle)
+                                            inputText.setText("")
+                                            inputTextBuilder = StringBuilder()
+                                            count++
+                                        }
+                                    }
+                                    if (count==0){
+                                        Toast.makeText(requireContext(), "Pin code is incorrect. Try again!", Toast.LENGTH_SHORT).show()
+                                        input1.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                                        input2.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                                        input3.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                                        input4.setBackgroundResource(R.drawable.pincode_circle_empty_background)
+                                        inputTextBuilder = StringBuilder()
+                                        inputText.setText("")
+                                    }
+                                }else{
+                                    Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
                 }

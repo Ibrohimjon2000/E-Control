@@ -15,14 +15,20 @@ import com.permissionx.guolindev.PermissionX
 import dagger.hilt.android.AndroidEntryPoint
 import uz.devapp.e_control.R
 import uz.devapp.e_control.data.repository.sealed.DataResult
+import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.databinding.FragmentQrCodeBinding
 import uz.devapp.e_control.utils.Constants
+import uz.devapp.e_control.utils.NetworkHelper
 
 @AndroidEntryPoint
 class QrCodeFragment : Fragment() {
     lateinit var binding: FragmentQrCodeBinding
     private lateinit var codeScanner: CodeScanner
     private val viewModel: MainViewModel by viewModels()
+    private var networkHelper: NetworkHelper? = null
+    val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstance(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +77,24 @@ class QrCodeFragment : Fragment() {
 
         codeScanner.decodeCallback = DecodeCallback {
             requireActivity().runOnUiThread {
-                viewModel.getEmployeeByPinCode(it.text,requireContext())
+                networkHelper = NetworkHelper(requireContext())
+                if (networkHelper?.isNetworkConnected() == true) {
+                    viewModel.getEmployeeByPinCode(it.text)
+                }else{
+                    if (appDatabase.employeeDao().getEmployees().isNotEmpty()){
+                        val employeeEntityList = appDatabase.employeeDao().getEmployees()
+                        employeeEntityList.forEach { employeeEntity ->
+                            if (employeeEntity.pinCode==it.text.toInt()){
+                                val bundle = Bundle()
+                                bundle.putSerializable(Constants.EXTRA_DATA, employeeEntity)
+                                requireActivity().findNavController(R.id.fragmentContainerView)
+                                    .navigate(R.id.action_qrCodeFragment_to_setStatusFragment, bundle)
+                            }
+                        }
+                    }else{
+                        Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 

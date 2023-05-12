@@ -1,7 +1,6 @@
 package uz.devapp.e_control.screen
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,7 +16,6 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,18 +24,19 @@ import androidx.navigation.findNavController
 import com.permissionx.guolindev.PermissionX
 import dagger.hilt.android.AndroidEntryPoint
 import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
 import kotlinx.coroutines.launch
 import uz.devapp.e_control.R
 import uz.devapp.e_control.adapters.PurposeAdapter
 import uz.devapp.e_control.adapters.PurposeAdapterCallback
-import uz.devapp.e_control.data.model.EmployeeModel
-import uz.devapp.e_control.data.model.Purpose
 import uz.devapp.e_control.data.model.request.PurposeRequest
 import uz.devapp.e_control.data.repository.sealed.DataResult
+import uz.devapp.e_control.database.AppDatabase
+import uz.devapp.e_control.database.entity.AttendsEntity
+import uz.devapp.e_control.database.entity.EmployeeEntity
+import uz.devapp.e_control.database.entity.PurposeEntity
 import uz.devapp.e_control.databinding.FragmentSetStatusBinding
 import uz.devapp.e_control.utils.Constants
+import uz.devapp.e_control.utils.NetworkHelper
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,13 +47,18 @@ private const val ARG_PARAM1 = Constants.EXTRA_DATA
 
 @AndroidEntryPoint
 class SetStatusFragment : Fragment() {
-    private var param1: EmployeeModel? = null
+    private var param1: EmployeeEntity? = null
     lateinit var binding: FragmentSetStatusBinding
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     private val viewModel: MainViewModel by viewModels()
     private var type = ""
+    private var networkHelper: NetworkHelper? = null
+    val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstance(requireContext())
+    }
+
 
     private var mTimeLeftInMillis: Long = 2000
     private var mEndTime: Long = 0
@@ -64,9 +68,9 @@ class SetStatusFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (Build.VERSION.SDK_INT < 33) {
-                param1 = it.getSerializable(ARG_PARAM1) as EmployeeModel
+                param1 = it.getSerializable(ARG_PARAM1) as EmployeeEntity
             } else {
-                param1 = it.getSerializable(ARG_PARAM1, EmployeeModel::class.java)
+                param1 = it.getSerializable(ARG_PARAM1, EmployeeEntity::class.java)
             }
         }
     }
@@ -159,7 +163,7 @@ class SetStatusFragment : Fragment() {
                             rv.visibility = View.VISIBLE
                             rv.adapter =
                                 PurposeAdapter(it.result.purposes, object : PurposeAdapterCallback {
-                                    override fun onClickListener(item: Purpose) {
+                                    override fun onClickListener(item: PurposeEntity) {
                                         viewModel.setPurpose(
                                             PurposeRequest(
                                                 it.result.attendanceId,
@@ -208,13 +212,55 @@ class SetStatusFragment : Fragment() {
                     lifecycleScope.launch {
                         val compressedImageFile = Compressor.compress(requireContext(), photoFile)
                         val savedUri = Uri.fromFile(compressedImageFile)
-                        viewModel.saveAttends(
-                            savedUri.path.toString(),
-                            type,
-                            param1!!.id,
-                            1,
-                            requireContext()
-                        )
+                        networkHelper = NetworkHelper(requireContext())
+                        if (networkHelper?.isNetworkConnected() == true) {
+                            viewModel.saveAttends(savedUri.path.toString(), type, param1!!.id, 1)
+                        }else{
+                            val currentTimeMillis = System.currentTimeMillis()
+                            val sdf = SimpleDateFormat("HH:mm")
+                            val resultdate = Date(currentTimeMillis)
+                            val format = sdf.format(resultdate)
+                            val moment=resultdate.hours<8
+
+                            binding.card.visibility = View.GONE
+                            binding.cardResult.visibility = View.VISIBLE
+                            binding.resultName.text = param1!!.name
+                            binding.resultTime.text =
+                                (if (type == "input") "Keldi: " else "Ketdi: ") + format
+                            if (type=="input"){
+                                binding.status.text = if ((moment)) "" else "Kech qoldi"
+                            }
+
+                            when(type){
+                                "input"->{
+                                    if ((moment)) {
+                                        binding.rv.visibility = View.GONE
+                                        binding.root.postDelayed({
+                                            requireActivity().findNavController(R.id.fragmentContainerView)
+                                                .navigate(R.id.action_setStatusFragment_to_homeFragment)
+                                        }, 2000)
+                                    } else {
+                                        binding.rv.visibility = View.VISIBLE
+                                        binding.rv.adapter =
+                                            PurposeAdapter(appDatabase.purposeDao().getPurpose(), object : PurposeAdapterCallback {
+                                                override fun onClickListener(item: PurposeEntity) {
+                                                    appDatabase.attendsDao().addAttends(AttendsEntity(image = savedUri.path.toString(), type = type, employeeId = param1!!.id, deviceId = 1, date = currentTimeMillis, purposeId = item.id))
+                                                    requireActivity().findNavController(R.id.fragmentContainerView)
+                                                        .navigate(R.id.action_setStatusFragment_to_homeFragment)
+                                                }
+                                            })
+                                    }
+                                }
+                                "output"->{
+                                    appDatabase.attendsDao().addAttends(AttendsEntity(image = savedUri.path.toString(), type = type, employeeId = param1!!.id, deviceId = 1, date = currentTimeMillis))
+                                    binding.rv.visibility = View.GONE
+                                    binding.root.postDelayed({
+                                        requireActivity().findNavController(R.id.fragmentContainerView)
+                                            .navigate(R.id.action_setStatusFragment_to_homeFragment)
+                                    }, 2000)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -279,7 +325,7 @@ class SetStatusFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: EmployeeModel) =
+        fun newInstance(param1: EmployeeEntity) =
             SetStatusFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_PARAM1, param1)
