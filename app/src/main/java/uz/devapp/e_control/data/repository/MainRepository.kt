@@ -131,7 +131,7 @@ class MainRepository(private val api: Api) {
         date: String,
         employeeId: Int,
         deviceId: Int,
-        purposeId: Int
+        purposeId: Int?
     ) = flow {
         emit(DataResult.LoadingShow())
         val file = java.io.File(image)
@@ -159,7 +159,7 @@ class MainRepository(private val api: Api) {
             deviceId.toString()
         )
 
-        val purposeIdBody: RequestBody = RequestBody.create(
+        val purposeIdBody: RequestBody? = RequestBody.create(
             MediaType.parse("text/plain"),
             purposeId.toString()
         )

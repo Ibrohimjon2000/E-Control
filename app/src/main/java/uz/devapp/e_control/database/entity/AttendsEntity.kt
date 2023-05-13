@@ -8,14 +8,14 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class AttendsEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int=0,
+    val id: Int = 0,
     val image: String,
-    val type:String,
+    val type: String,
     @ColumnInfo(name = "employee_id")
-    val employeeId:Int,
+    val employeeId: Int,
     @ColumnInfo(name = "device_id")
-    val deviceId:Int,
-    val date:Long,
+    val deviceId: Int,
+    val date: Long,
     @ColumnInfo(name = "purpose_id")
-    val purposeId:Int=0
+    val purposeId: Int? = null
 )

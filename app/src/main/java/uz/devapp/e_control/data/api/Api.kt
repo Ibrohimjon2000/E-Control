@@ -47,7 +47,7 @@ interface Api {
         @Part("date") date: RequestBody,
         @Part("employee_id") employeeId: RequestBody,
         @Part("device_id") deviceId: RequestBody,
-        @Part("purpose_id") purposeId: RequestBody,
+        @Part("purpose_id") purposeId: RequestBody?,
     ): Response<BaseResponse<Any?>>
 
     @POST("api/device/find")

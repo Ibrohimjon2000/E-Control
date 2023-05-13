@@ -294,7 +294,8 @@ class SetStatusFragment : Fragment() {
                                             type = type,
                                             employeeId = param1!!.id,
                                             deviceId = PrefUtils.getId(),
-                                            date = currentTimeMillis
+                                            date = currentTimeMillis,
+                                            purposeId = null
                                         )
                                     )
                                     binding.rv.visibility = View.GONE
