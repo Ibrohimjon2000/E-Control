@@ -5,6 +5,7 @@ import uz.devapp.e_control.MyApp
 
 object PrefUtils {
     const val PREF_TOKEN = "token"
+    const val PREF_ID = "id"
 
     fun init() {
         Hawk.init(MyApp.app).build()
@@ -19,11 +20,11 @@ object PrefUtils {
     }
 
     fun setId(value: Int?) {
-        Hawk.put(PREF_TOKEN, value)
+        Hawk.put(PREF_ID, value)
     }
 
     fun getId(): Int {
-        return Hawk.get(PREF_TOKEN,0)
+        return Hawk.get(PREF_ID,0)
     }
 
     fun clear() {

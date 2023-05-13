@@ -44,12 +44,12 @@ class SplashFragment : Fragment() {
                 }
                 is DataResult.Success -> {
                     appDatabase.employeeDao().addEmployees(it.result!!)
-                    if (PrefUtils.getToken().isNotEmpty()) {
-                        requireActivity().findNavController(R.id.fragmentContainerView)
-                            .navigate(R.id.action_splashFragment_to_homeFragment)
-                    } else {
+                    if (PrefUtils.getToken().isEmpty()) {
                         requireActivity().findNavController(R.id.fragmentContainerView)
                             .navigate(R.id.action_splashFragment_to_deviceFragment)
+                    } else {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_homeFragment)
                     }
                 }
             }
@@ -79,12 +79,12 @@ class SplashFragment : Fragment() {
         } else {
             if (appDatabase.employeeDao().getEmployees().isNotEmpty()) {
                 binding.root.postDelayed({
-                    if (PrefUtils.getToken().isNotEmpty()) {
-                        requireActivity().findNavController(R.id.fragmentContainerView)
-                            .navigate(R.id.action_splashFragment_to_homeFragment)
-                    } else {
+                    if (PrefUtils.getToken().isEmpty()) {
                         requireActivity().findNavController(R.id.fragmentContainerView)
                             .navigate(R.id.action_splashFragment_to_deviceFragment)
+                    } else {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_homeFragment)
                     }
                 }, 2000)
             } else {

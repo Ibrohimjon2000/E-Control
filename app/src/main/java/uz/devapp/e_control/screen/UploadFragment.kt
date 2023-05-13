@@ -17,6 +17,7 @@ import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.database.entity.AttendsEntity
 import uz.devapp.e_control.databinding.FragmentUploadBinding
 import uz.devapp.e_control.utils.NetworkHelper
+import uz.devapp.e_control.utils.PrefUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,7 +45,7 @@ class UploadFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
-        val attendsEntityList = appDatabase.attendsDao().getAttends() as ArrayList<AttendsEntity>
+        val attendsEntityList = appDatabase.attendsDao().getAttends().filter { attendsEntity -> PrefUtils.getId()==attendsEntity.deviceId } as ArrayList<AttendsEntity>
         val employeeEntityList = appDatabase.employeeDao().getEmployees()
         val purposeEntityList = appDatabase.purposeDao().getPurpose()
 
