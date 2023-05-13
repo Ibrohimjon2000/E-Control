@@ -26,7 +26,7 @@ class UploadFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
     private var networkHelper: NetworkHelper? = null
     private lateinit var adapter: AttendsAdapter
-    private var bool=true
+    private var bool = true
     val appDatabase: AppDatabase by lazy {
         AppDatabase.getInstance(requireContext())
     }
@@ -77,7 +77,7 @@ class UploadFragment : Fragment() {
                         } else {
                             binding.lottie.visibility = View.GONE
                         }
-                        bool=true
+                        bool = true
                     }
                 }
             }
@@ -86,9 +86,9 @@ class UploadFragment : Fragment() {
         binding.upload.setOnClickListener {
             networkHelper = NetworkHelper(requireContext())
             if (networkHelper?.isNetworkConnected() == true) {
-                if (bool){
+                if (bool) {
                     attendsEntityList.forEach { attendsEntity ->
-                        val sdf = SimpleDateFormat("yyyy-mm-dd hh:mm:ss")
+                        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                         val resultdate = Date(attendsEntity.date)
                         val format = sdf.format(resultdate)
                         binding.root.postDelayed({
@@ -103,7 +103,7 @@ class UploadFragment : Fragment() {
                         }, 100)
                         appDatabase.attendsDao().deleteAttends(attendsEntity)
                     }
-                    bool=false
+                    bool = false
                 }
             } else {
                 Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT)

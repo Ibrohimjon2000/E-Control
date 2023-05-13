@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="#040C13"
     tools:context=".screen.HomeFragment">
 
     <LinearLayout
@@ -22,15 +23,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="ID ni kiriting"
-            android:textColor="@color/white"
+            android:textColor="#20C693"
             android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -77,27 +78,27 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn1"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="1"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn2"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
@@ -106,14 +107,14 @@
                 android:layout_toRightOf="@id/btn1"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="2"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn3"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="12dp"
@@ -121,103 +122,103 @@
                 android:layout_toRightOf="@id/btn2"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="3"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn4"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn1"
                 android:layout_margin="12dp"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="4"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn5"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn1"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn1"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="5"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn6"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn1"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn2"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="6"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn7"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn4"
                 android:layout_margin="12dp"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="7"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn8"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn4"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn1"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="8"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn9"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn4"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn2"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="9"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn0"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn7"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn1"
                 android:background="@drawable/pincode_circle_empty_background"
                 android:text="0"
-                android:textColor="@color/white"
+                android:textColor="#20C693"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/btnBack"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn7"
                 android:layout_margin="12dp"
                 android:gravity="center">
@@ -231,8 +232,8 @@
 
             <LinearLayout
                 android:id="@+id/btnQr"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_below="@id/btn7"
                 android:layout_margin="12dp"
                 android:layout_toRightOf="@id/btn2"
@@ -264,5 +265,15 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:src="@drawable/upload" />
+
+    <ImageView
+        android:id="@+id/exit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/baseline_logout_24"
+        app:tint="#20C693" />
 
 </FrameLayout>

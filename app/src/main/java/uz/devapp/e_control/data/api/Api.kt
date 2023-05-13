@@ -5,6 +5,8 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import uz.devapp.e_control.data.model.AttendsModel
+import uz.devapp.e_control.data.model.DeviceModel
+import uz.devapp.e_control.data.model.request.DeviceRequest
 import uz.devapp.e_control.database.entity.EmployeeEntity
 import uz.devapp.e_control.data.model.request.PurposeRequest
 import uz.devapp.e_control.data.model.response.BaseResponse
@@ -32,10 +34,10 @@ interface Api {
     ): Response<BaseResponse<Any?>>
 
     @GET("api/employee/list")
-    suspend fun getEmployees():Response<BaseResponse<List<EmployeeEntity>>>
+    suspend fun getEmployees(): Response<BaseResponse<List<EmployeeEntity>>>
 
     @GET("api/purpose/list")
-    suspend fun getPurpose():Response<BaseResponse<List<PurposeEntity>>>
+    suspend fun getPurpose(): Response<BaseResponse<List<PurposeEntity>>>
 
     @Multipart
     @POST("api/attendance/add/offline")
@@ -47,4 +49,9 @@ interface Api {
         @Part("device_id") deviceId: RequestBody,
         @Part("purpose_id") purposeId: RequestBody,
     ): Response<BaseResponse<Any?>>
+
+    @POST("api/device/find")
+    suspend fun getDevice(
+        @Body request: DeviceRequest
+    ): Response<BaseResponse<DeviceModel>>
 }

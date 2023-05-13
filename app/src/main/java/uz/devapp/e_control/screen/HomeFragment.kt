@@ -17,6 +17,7 @@ import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.databinding.FragmentHomeBinding
 import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.utils.NetworkHelper
+import uz.devapp.e_control.utils.PrefUtils
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -38,6 +39,12 @@ class HomeFragment : Fragment() {
             binding.btnQr.setOnClickListener {
                 requireActivity().findNavController(R.id.fragmentContainerView)
                     .navigate(R.id.action_homeFragment_to_qrCodeFragment)
+            }
+
+            exit.setOnClickListener {
+                PrefUtils.clear()
+                requireActivity().findNavController(R.id.fragmentContainerView)
+                    .navigate(R.id.action_homeFragment_to_splashFragment)
             }
 
             binding.upload.setOnClickListener {

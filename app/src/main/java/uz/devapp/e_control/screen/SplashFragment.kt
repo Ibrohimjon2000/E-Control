@@ -14,6 +14,7 @@ import uz.devapp.e_control.data.repository.sealed.DataResult
 import uz.devapp.e_control.database.AppDatabase
 import uz.devapp.e_control.databinding.FragmentSplashBinding
 import uz.devapp.e_control.utils.NetworkHelper
+import uz.devapp.e_control.utils.PrefUtils
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -29,7 +30,7 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSplashBinding.inflate(inflater, container, false)
-
+        PrefUtils.init()
         viewModel.employeeEntityLiveData.observe(requireActivity()) {
             when (it) {
                 is DataResult.Error -> {
@@ -43,8 +44,13 @@ class SplashFragment : Fragment() {
                 }
                 is DataResult.Success -> {
                     appDatabase.employeeDao().addEmployees(it.result!!)
-                    requireActivity().findNavController(R.id.fragmentContainerView)
-                        .navigate(R.id.action_splashFragment_to_homeFragment)
+                    if (PrefUtils.getToken().isNotEmpty()) {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_homeFragment)
+                    } else {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_deviceFragment)
+                    }
                 }
             }
         }
@@ -73,8 +79,13 @@ class SplashFragment : Fragment() {
         } else {
             if (appDatabase.employeeDao().getEmployees().isNotEmpty()) {
                 binding.root.postDelayed({
-                    requireActivity().findNavController(R.id.fragmentContainerView)
-                        .navigate(R.id.action_splashFragment_to_homeFragment)
+                    if (PrefUtils.getToken().isNotEmpty()) {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_homeFragment)
+                    } else {
+                        requireActivity().findNavController(R.id.fragmentContainerView)
+                            .navigate(R.id.action_splashFragment_to_deviceFragment)
+                    }
                 }, 2000)
             } else {
                 Toast.makeText(requireContext(), "Internet not connection", Toast.LENGTH_SHORT)

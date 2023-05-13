@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import uz.devapp.e_control.data.model.AttendsModel
+import uz.devapp.e_control.data.model.DeviceModel
+import uz.devapp.e_control.data.model.request.DeviceRequest
 import uz.devapp.e_control.data.model.request.PurposeRequest
 import uz.devapp.e_control.data.repository.MainRepository
 import uz.devapp.e_control.data.repository.sealed.DataResult
@@ -39,6 +41,9 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
 
     private var _purposeGetLiveData = MutableLiveData<DataResult<List<PurposeEntity>?>>()
     var purposeGetLiveData: LiveData<DataResult<List<PurposeEntity>?>> = _purposeGetLiveData
+
+    private var _deviceLiveData = MutableLiveData<DataResult<DeviceModel>>()
+    var deviceLiveData: LiveData<DataResult<DeviceModel>> = _deviceLiveData
 
     fun getEmployees() {
         viewModelScope.launch {
@@ -92,6 +97,14 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
         viewModelScope.launch {
             repository.setPurpose(request, context).collect {
                 _purposeLiveData.value = it
+            }
+        }
+    }
+
+    fun getDevice(request: DeviceRequest) {
+        viewModelScope.launch {
+            repository.getDevice(request).collect {
+                _deviceLiveData.value = it
             }
         }
     }

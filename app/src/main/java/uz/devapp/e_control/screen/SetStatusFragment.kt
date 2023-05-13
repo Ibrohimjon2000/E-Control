@@ -38,6 +38,7 @@ import uz.devapp.e_control.database.entity.PurposeEntity
 import uz.devapp.e_control.databinding.FragmentSetStatusBinding
 import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.utils.NetworkHelper
+import uz.devapp.e_control.utils.PrefUtils
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -173,7 +174,7 @@ class SetStatusFragment : Fragment() {
                                         viewModel.setPurpose(
                                             PurposeRequest(
                                                 it.result.attendanceId,
-                                                1,
+                                                PrefUtils.getId(),
                                                 param1!!.id,
                                                 item.id
                                             ), requireContext()
@@ -220,7 +221,12 @@ class SetStatusFragment : Fragment() {
                         val savedUri = Uri.fromFile(compressedImageFile)
                         networkHelper = NetworkHelper(requireContext())
                         if (networkHelper?.isNetworkConnected() == true) {
-                            viewModel.saveAttends(savedUri.path.toString(), type, param1!!.id, 1)
+                            viewModel.saveAttends(
+                                savedUri.path.toString(),
+                                type,
+                                param1!!.id,
+                                PrefUtils.getId()
+                            )
                             Glide.with(requireContext())
                                 .load(savedUri.path.toString())
                                 .into(binding.image)
@@ -270,7 +276,7 @@ class SetStatusFragment : Fragment() {
                                                                 image = savedUri.path.toString(),
                                                                 type = type,
                                                                 employeeId = param1!!.id,
-                                                                deviceId = 1,
+                                                                deviceId = PrefUtils.getId(),
                                                                 date = currentTimeMillis,
                                                                 purposeId = item.id
                                                             )
@@ -287,7 +293,7 @@ class SetStatusFragment : Fragment() {
                                             image = savedUri.path.toString(),
                                             type = type,
                                             employeeId = param1!!.id,
-                                            deviceId = 1,
+                                            deviceId = PrefUtils.getId(),
                                             date = currentTimeMillis
                                         )
                                     )

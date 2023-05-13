@@ -84,4 +84,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.0'
 
     implementation 'com.airbnb.android:lottie:5.0.3'
+
+    implementation "com.orhanobut:hawk:2.0.1"
 }

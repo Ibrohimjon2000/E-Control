@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#040C13"
     tools:context=".screen.UploadFragment">
 
     <LinearLayout
@@ -26,6 +27,8 @@
             android:layout_height="56dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:backgroundTint="#20C693"
+            android:textColor="#040C13"
             android:text="Upload"
             android:textAllCaps="false"
             app:cornerRadius="10dp" />
@@ -47,6 +50,6 @@
         android:visibility="gone"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/emptylist" />
+        app:lottie_rawRes="@raw/empy_list" />
 
 </FrameLayout>
