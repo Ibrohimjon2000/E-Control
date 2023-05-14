@@ -154,19 +154,16 @@ class SetStatusFragment : Fragment() {
                         resultTime.text =
                             (if (type == "input") "Keldi: " else "Ketdi: ") + it.result.nowTime
                         status.text = if ((it.result.moment)) "" else "Kech qoldi"
-                        if (it.result.moment) {
-                            status.visibility = View.GONE
-                        } else {
-                            status.visibility = View.VISIBLE
-                        }
 
                         if ((it.result.moment)) {
+                            status.visibility = View.GONE
                             rv.visibility = View.GONE
                             root.postDelayed({
                                 requireActivity().findNavController(R.id.fragmentContainerView)
                                     .navigate(R.id.action_setStatusFragment_to_homeFragment)
                             }, 2000)
                         } else {
+                            status.visibility = View.VISIBLE
                             rv.visibility = View.VISIBLE
                             rv.adapter =
                                 PurposeAdapter(it.result.purposes, object : PurposeAdapterCallback {
@@ -245,26 +242,19 @@ class SetStatusFragment : Fragment() {
                             binding.resultName.text = param1!!.name
                             binding.resultTime.text =
                                 (if (type == "input") "Keldi: " else "Ketdi: ") + format
-                            if (type == "input") {
-                                binding.status.text = if ((moment)) "" else "Kech qoldi"
-                                if (moment) {
-                                    binding.status.visibility = View.GONE
-                                } else {
-                                    binding.status.visibility = View.VISIBLE
-                                }
-                            } else {
-                                binding.status.visibility = View.GONE
-                            }
 
                             when (type) {
                                 "input" -> {
-                                    if ((moment)) {
+                                    binding.status.text = if (moment) "" else "Kech qoldi"
+                                    if (moment) {
+                                        binding.status.visibility = View.GONE
                                         binding.rv.visibility = View.GONE
                                         binding.root.postDelayed({
                                             requireActivity().findNavController(R.id.fragmentContainerView)
                                                 .navigate(R.id.action_setStatusFragment_to_homeFragment)
                                         }, 2000)
                                     } else {
+                                        binding.status.visibility = View.VISIBLE
                                         binding.rv.visibility = View.VISIBLE
                                         binding.rv.adapter =
                                             PurposeAdapter(
@@ -288,6 +278,7 @@ class SetStatusFragment : Fragment() {
                                     }
                                 }
                                 "output" -> {
+                                    binding.status.visibility = View.GONE
                                     appDatabase.attendsDao().addAttends(
                                         AttendsEntity(
                                             image = savedUri.path.toString(),
