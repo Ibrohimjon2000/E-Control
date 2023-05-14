@@ -17,5 +17,5 @@ data class AttendsEntity(
     val deviceId: Int,
     val date: Long,
     @ColumnInfo(name = "purpose_id")
-    val purposeId: Int? = null
+    val purposeId: Int=0
 )

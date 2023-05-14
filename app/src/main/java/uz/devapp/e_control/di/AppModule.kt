@@ -15,6 +15,7 @@ import uz.devapp.e_control.BuildConfig
 import uz.devapp.e_control.data.api.Api
 import uz.devapp.e_control.utils.Constants
 import uz.devapp.e_control.data.repository.MainRepository
+import uz.devapp.e_control.utils.PrefUtils
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -48,7 +49,12 @@ class AppModule {
     @Provides
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         val builder = OkHttpClient.Builder()
-
+        builder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("Token", PrefUtils.getToken())
+                .build()
+            chain.proceed(request)
+        }
         builder.connectTimeout(15, TimeUnit.SECONDS)
         builder.readTimeout(15, TimeUnit.SECONDS)
         builder.writeTimeout(15, TimeUnit.SECONDS)

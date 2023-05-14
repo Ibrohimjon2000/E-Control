@@ -83,7 +83,7 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
         date: String,
         employeeId: Int,
         deviceId: Int,
-        purposeId: Int?
+        purposeId: Int
     ) {
         viewModelScope.launch {
             repository.saveAttendsOffline(image, type, date, employeeId, deviceId, purposeId)
