@@ -42,7 +42,7 @@ class DeviceFragment : Fragment() {
                     }
                     is DataResult.Success -> {
                         PrefUtils.setToken(it.result.token)
-                        PrefUtils.setId(it.result.id)
+                        PrefUtils.setDevice(it.result)
                         requireActivity().findNavController(R.id.fragmentContainerView)
                             .navigate(R.id.action_deviceFragment_to_homeFragment)
                     }

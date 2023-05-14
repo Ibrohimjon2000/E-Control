@@ -171,7 +171,7 @@ class SetStatusFragment : Fragment() {
                                         viewModel.setPurpose(
                                             PurposeRequest(
                                                 it.result.attendanceId,
-                                                PrefUtils.getId(),
+                                                PrefUtils.getDevice().id,
                                                 param1!!.id,
                                                 item.id
                                             ), requireContext()
@@ -216,17 +216,27 @@ class SetStatusFragment : Fragment() {
                     lifecycleScope.launch {
                         val compressedImageFile = Compressor.compress(requireContext(), photoFile)
                         val savedUri = Uri.fromFile(compressedImageFile)
-                        networkHelper = NetworkHelper(requireContext())
-                        if (networkHelper?.isNetworkConnected() == true) {
-                            viewModel.saveAttends(
-                                savedUri.path.toString(),
-                                type,
-                                param1!!.id,
-                                PrefUtils.getId()
-                            )
-                            Glide.with(requireContext())
-                                .load(savedUri.path.toString())
-                                .into(binding.image)
+
+                        if (PrefUtils.getSwitch()) {
+                            networkHelper = NetworkHelper(requireContext())
+                            if (networkHelper?.isNetworkConnected() == true) {
+                                viewModel.saveAttends(
+                                    savedUri.path.toString(),
+                                    type,
+                                    param1!!.id,
+                                    PrefUtils.getDevice().id
+                                )
+                                Glide.with(requireContext())
+                                    .load(savedUri.path.toString())
+                                    .into(binding.image)
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Internet not connection",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
                         } else {
                             val currentTimeMillis = System.currentTimeMillis()
                             val sdf = SimpleDateFormat("HH:mm")
@@ -266,7 +276,7 @@ class SetStatusFragment : Fragment() {
                                                                 image = savedUri.path.toString(),
                                                                 type = type,
                                                                 employeeId = param1!!.id,
-                                                                deviceId = PrefUtils.getId(),
+                                                                deviceId = PrefUtils.getDevice().id,
                                                                 date = currentTimeMillis,
                                                                 purposeId = item.id
                                                             )
@@ -284,7 +294,7 @@ class SetStatusFragment : Fragment() {
                                             image = savedUri.path.toString(),
                                             type = type,
                                             employeeId = param1!!.id,
-                                            deviceId = PrefUtils.getId(),
+                                            deviceId = PrefUtils.getDevice().id,
                                             date = currentTimeMillis,
                                         )
                                     )

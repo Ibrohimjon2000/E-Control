@@ -40,12 +40,12 @@ class UploadFragment : Fragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 requireActivity().findNavController(R.id.fragmentContainerView)
-                    .navigate(R.id.action_uploadFragment_to_homeFragment)
+                    .navigate(R.id.action_uploadFragment_to_settingsFragment)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
 
-        val attendsEntityList = appDatabase.attendsDao().getAttends().filter { attendsEntity -> PrefUtils.getId()==attendsEntity.deviceId } as ArrayList<AttendsEntity>
+        val attendsEntityList = appDatabase.attendsDao().getAttends().filter { attendsEntity -> PrefUtils.getDevice().id==attendsEntity.deviceId } as ArrayList<AttendsEntity>
         val employeeEntityList = appDatabase.employeeDao().getEmployees()
         val purposeEntityList = appDatabase.purposeDao().getPurpose()
 

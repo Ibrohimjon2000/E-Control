@@ -29,7 +29,7 @@
             android:layout_marginRight="16dp"
             android:backgroundTint="#20C693"
             android:textColor="#040C13"
-            android:text="Upload"
+            android:text="Yuklash"
             android:textAllCaps="false"
             app:cornerRadius="10dp" />
 

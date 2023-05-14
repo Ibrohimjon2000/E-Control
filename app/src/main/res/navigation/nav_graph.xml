@@ -24,14 +24,8 @@
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_homeFragment_to_uploadFragment"
-            app:destination="@id/uploadFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_homeFragment_to_splashFragment"
-            app:destination="@id/splashFragment"
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
@@ -93,8 +87,8 @@
         android:label="fragment_upload"
         tools:layout="@layout/fragment_upload">
         <action
-            android:id="@+id/action_uploadFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
+            android:id="@+id/action_uploadFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/uploadFragment"
             app:popUpToInclusive="true" />
@@ -109,6 +103,30 @@
             app:destination="@id/homeFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/deviceFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="uz.devapp.e_control.screen.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_uploadFragment"
+            app:destination="@id/uploadFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_splashFragment"
+            app:destination="@id/splashFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/settingsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/settingsFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
